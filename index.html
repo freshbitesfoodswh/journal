@@ -14,15 +14,16 @@ header{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:
 header h1{margin:0;font-weight:300;letter-spacing:.18em;text-transform:uppercase;font-size:14px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;color:transparent}
 header .spacer{flex:1}#userbar{display:flex;align-items:center;gap:8px;font-size:12px}
 #userbar img{width:28px;height:28px;border-radius:50%}#userbar button,.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
-.tabs{display:flex;gap:6px;padding:10px 12px;overflow-x:auto}
+.tabs{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;align-items:center}
 .tabs button{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap}
 .tabs button.on{color:#0c0718;background:linear-gradient(90deg,var(--cyan),var(--violet));border:0;font-weight:600}
+#backJournal{display:none;margin-left:auto;background:linear-gradient(90deg,var(--cyan),var(--violet));border:0;color:#0c0718;font-weight:700;border-radius:999px;padding:10px 16px;cursor:pointer;font-size:14px}
+body.mode-canvas #backJournal{display:inline-flex;align-items:center;gap:6px}
 main{max-width:920px;margin:0 auto;padding:8px 14px 80px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:10px 0;backdrop-filter:blur(12px)}
 .card h2{margin:0 0 6px;font-size:18px;font-weight:500}.card h3{margin:14px 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
 .meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:12px;margin-bottom:8px}
 .chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px}
-label{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}
 textarea,input[type=text]{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:10px;font:inherit;resize:vertical;min-height:72px}
 .prompt{font-style:italic;color:#d7c8f5;margin:0 0 6px}
 .row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
@@ -31,33 +32,39 @@ button.ghost{min-height:40px}.daynav{display:flex;gap:8px;align-items:center;jus
 .daynav select{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px}
 .verse{border-left:3px solid var(--pink);padding-left:12px;margin:8px 0;color:#e8d5ff}
 .saved{font-size:12px;color:#7dffa8;min-height:1.2em}
-/* Canvas mode */
 #canvas-pane{display:none;height:calc(100dvh - 120px);position:relative}
 body.mode-canvas main{max-width:none;padding:0;height:calc(100dvh - 110px)}
 body.mode-canvas #journal-pane{display:none}body.mode-canvas #canvas-pane{display:flex;flex-direction:column;height:100%}
-.ctool{display:flex;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:rgba(12,7,24,.85)}
+.ctool{display:flex;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:rgba(12,7,24,.85);align-items:center}
 .ctool button,.ctool label.btn{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:13px}
 .ctool button.on{outline:2px solid var(--cyan)}.ctool input[type=file]{display:none}
+#cDayLabel{font-size:12px;color:var(--cyan);margin-right:8px;letter-spacing:.04em}
 #board-wrap{flex:1;overflow:hidden;position:relative;background:
   linear-gradient(rgba(123,47,247,.08) 1px,transparent 1px),
   linear-gradient(90deg,rgba(123,47,247,.08) 1px,transparent 1px),#0a0614;
   background-size:40px 40px;touch-action:none;cursor:grab}
-#board{position:absolute;left:0;top:0;transform-origin:0 0}
-.item{position:absolute;min-width:40px;min-height:24px;border:1px solid transparent;border-radius:10px;padding:8px;cursor:move;user-select:none;background:rgba(255,255,255,.05)}
+#board{position:absolute;left:0;top:0;transform-origin:0 0;width:3000px;height:4000px}
+.item{position:absolute;min-width:40px;min-height:24px;border:1px solid transparent;border-radius:10px;padding:8px;cursor:move;user-select:none;background:rgba(255,255,255,.05);z-index:2}
 .item.selected{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,194,255,.25)}
 .item.text{min-width:140px;white-space:pre-wrap;font-size:14px;line-height:1.4}
-.item.sticky{background:#ffe08a;color:#2a1a00;width:160px;min-height:120px;box-shadow:0 8px 20px rgba(0,0,0,.35);font-weight:500}
+.item.sticky{background:#ffe08a;color:#2a1a00;width:160px;min-height:120px;box-shadow:0 8px 20px rgba(0,0,0,.35);font-weight:500;z-index:5}
 .item.image img{max-width:220px;max-height:220px;display:block;border-radius:8px;pointer-events:none}
-.item.sticker{font-size:42px;background:transparent;border:0;padding:4px;text-align:center}
-.item.prompt-card{width:240px;background:linear-gradient(160deg,rgba(123,47,247,.35),rgba(255,46,154,.2));border:1px solid rgba(255,255,255,.2)}
-.item .del{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;border:0;background:#ff4d6d;color:#fff;display:none;cursor:pointer;font-size:12px}
+.item.sticker{font-size:42px;background:transparent;border:0;padding:4px;text-align:center;z-index:6}
+.item.journal-block{width:280px;background:linear-gradient(160deg,rgba(123,47,247,.4),rgba(12,7,24,.92));border:1px solid rgba(255,255,255,.22);padding:12px;z-index:3}
+.item.journal-block .jb-title{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
+.item.journal-block .jb-prompt{font-style:italic;font-size:13px;color:#d7c8f5;margin-bottom:8px;opacity:.9}
+.item.journal-block .jb-entry{min-height:64px;background:rgba(0,0,0,.35);border:1px solid rgba(124,247,255,.25);border-radius:10px;padding:8px;white-space:pre-wrap;outline:none}
+.item.journal-block .jb-entry:empty:before{content:attr(data-ph);opacity:.4}
+.item.day-header{width:300px;background:linear-gradient(90deg,rgba(0,194,255,.25),rgba(123,47,247,.35));border:1px solid rgba(255,255,255,.25);font-size:16px;font-weight:500;z-index:3}
+.item .del{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;border:0;background:#ff4d6d;color:#fff;display:none;cursor:pointer;font-size:12px;z-index:7}
 .item.selected .del{display:grid;place-items:center}
-#draw{position:absolute;left:0;top:0;pointer-events:none}
+.item.journal-block .del,.item.day-header .del{display:none!important}
+#draw{position:absolute;left:0;top:0;pointer-events:none;z-index:4}
 body.tool-draw #draw{pointer-events:auto;cursor:crosshair}
 body.tool-draw #board-wrap{cursor:crosshair}
 .zoomhud{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;z-index:5}
 .zoomhud button{background:rgba(0,0,0,.55);border:1px solid var(--line);color:#fff;border-radius:8px;padding:8px 10px}
-@media(max-width:640px){header h1{font-size:11px}.item.image img{max-width:160px}}
+@media(max-width:640px){header h1{font-size:11px}.item.image img{max-width:160px}.item.journal-block{width:260px}#backJournal{padding:10px 12px;font-size:13px}}
 </style>
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
@@ -69,8 +76,9 @@ body.tool-draw #board-wrap{cursor:crosshair}
   <div id="userbar"></div>
 </header>
 <div class="tabs" id="tabs">
-  <button class="on" data-mode="journal">Journal</button>
-  <button data-mode="canvas">Canvas</button>
+  <button class="on" data-mode="journal" id="tabJournal">Journal</button>
+  <button data-mode="canvas" id="tabCanvas">Canvas</button>
+  <button type="button" id="backJournal">← Back to Journal</button>
 </div>
 <main>
   <div id="journal-pane">
@@ -92,6 +100,7 @@ body.tool-draw #board-wrap{cursor:crosshair}
   </div>
   <div id="canvas-pane">
     <div class="ctool" id="ctool">
+      <span id="cDayLabel"></span>
       <button data-tool="pan" class="on">Pan</button>
       <button data-tool="text">Text</button>
       <button data-tool="sticky">Sticky</button>
@@ -101,14 +110,14 @@ body.tool-draw #board-wrap{cursor:crosshair}
       <button data-tool="sticker" data-emoji="🌙">🌙</button>
       <button data-tool="sticker" data-emoji="💜">💜</button>
       <button data-tool="sticker" data-emoji="✨">✨</button>
-      <button id="addPrompt">+ Today's prompt</button>
       <label class="btn">Image<input type="file" id="imgFile" accept="image/*"></label>
       <button id="clearDraw">Clear ink</button>
       <button id="saveCanvas">Save canvas</button>
+      <button id="backJournal2" style="background:linear-gradient(90deg,#00C2FF,#7B2FF7);border:0;color:#0c0718;font-weight:700">← Journal</button>
     </div>
     <div id="board-wrap">
       <div id="board">
-        <canvas id="draw" width="3000" height="2000"></canvas>
+        <canvas id="draw" width="3000" height="4000"></canvas>
       </div>
       <div class="zoomhud">
         <button id="zin">+</button>
@@ -120,10 +129,21 @@ body.tool-draw #board-wrap{cursor:crosshair}
 </main>
 <script>
 const $=s=>document.querySelector(s);
-let PROMPTS={days:[]}, dayIdx=0, user=null, tool='pan';
+let PROMPTS={days:[]}, dayIdx=0, user=null, tool='pan', mode='journal';
 let view={x:40,y:40,s:1}, drag=null, selected=null;
 const board=$('#board'), wrap=$('#board-wrap'), draw=$('#draw'), dctx=draw.getContext('2d');
 dctx.strokeStyle='#FF2E9A';dctx.lineWidth=3;dctx.lineCap='round';
+
+const FIELD_DEFS = [
+  ['gratitude','Gratitude','gratitude'],
+  ['intention','Intention','intention'],
+  ['higher_self','Higher Self','higher_self'],
+  ['shadow','Shadow','shadow'],
+  ['humor','Humor','humor'],
+  ['meditation_notes','Meditation','meditation'],
+  ['faith_notes','Faith','faith'],
+  ['free','Free write','free']
+];
 
 function storageKey(suffix){
   const email=(user&&user.email)||'anon';
@@ -131,29 +151,86 @@ function storageKey(suffix){
 }
 function loadEntries(){try{return JSON.parse(localStorage.getItem(storageKey('entries'))||'{}')}catch{return{}}}
 function saveEntries(e){localStorage.setItem(storageKey('entries'),JSON.stringify(e))}
-function loadCanvas(){try{return JSON.parse(localStorage.getItem(storageKey('canvas'))||'null')}catch{return null}}
-function saveCanvasState(){
-  const items=[...board.querySelectorAll('.item')].map(el=>({
-    id:el.dataset.id, kind:el.dataset.kind, x:parseFloat(el.style.left), y:parseFloat(el.style.top),
-    html:el.dataset.kind==='image'?el.querySelector('img').src:el.innerText,
-    w:el.style.width||'', emoji:el.dataset.emoji||''
-  }));
-  localStorage.setItem(storageKey('canvas'), JSON.stringify({items, ink:draw.toDataURL(), view}));
-  flash('Canvas saved');
-}
+function canvasStoreKey(){ const d=day(); return storageKey('canvas:'+(d?d.date:'none')); }
+function loadCanvas(){try{return JSON.parse(localStorage.getItem(canvasStoreKey())||'null')}catch{return null}}
 
 function flash(msg){const el=$('#savedMsg'); if(el){el.textContent=msg; setTimeout(()=>el.textContent='',2500)}}
-
 function applyView(){board.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.s})`}
+function day(){return PROMPTS.days[dayIdx]}
+
+function collectJournalFields(){
+  const e={};
+  document.querySelectorAll('#fields textarea').forEach(t=>e[t.dataset.k]=t.value);
+  return e;
+}
+function persistJournalFields(){
+  const d=day(); if(!d) return;
+  const all=loadEntries();
+  const prev=all[d.date]||{};
+  const e={...prev, ...collectJournalFields(), savedAt:new Date().toISOString()};
+  all[d.date]=e; saveEntries(all); return e;
+}
+
+function promptText(d, key){
+  if(key==='faith') return (d.verse||'') + '\n\n' + (d.faith_reflection||'') + '\n\nAction: ' + (d.faith_action||'');
+  if(key==='free') return 'Anything else on your heart today.';
+  return d[key]||'';
+}
+
+function syncCanvasEntriesIntoJournal(){
+  const d=day(); if(!d) return;
+  const all=loadEntries();
+  const e={...(all[d.date]||{})};
+  board.querySelectorAll('.item.journal-block').forEach(el=>{
+    const k=el.dataset.field; if(!k) return;
+    const body=el.querySelector('.jb-entry');
+    if(body) e[k]=body.innerText;
+  });
+  e.savedAt=new Date().toISOString();
+  all[d.date]=e; saveEntries(all);
+}
+
+function saveCanvasState(silent){
+  const items=[...board.querySelectorAll('.item')].map(el=>{
+    const base={id:el.dataset.id, kind:el.dataset.kind, x:parseFloat(el.style.left), y:parseFloat(el.style.top), w:el.style.width||''};
+    if(el.dataset.kind==='image'){ base.html=el.querySelector('img').src; }
+    else if(el.dataset.kind==='sticker'){ base.emoji=el.dataset.emoji||el.innerText; base.html=base.emoji; }
+    else if(el.dataset.kind==='journal-block'){
+      base.field=el.dataset.field; base.title=el.querySelector('.jb-title')?.innerText||'';
+      base.prompt=el.querySelector('.jb-prompt')?.innerText||'';
+      base.entry=el.querySelector('.jb-entry')?.innerText||'';
+    } else if(el.dataset.kind==='day-header'){ base.html=el.innerText; }
+    else { base.html=el.innerText; }
+    return base;
+  });
+  localStorage.setItem(canvasStoreKey(), JSON.stringify({items, ink:draw.toDataURL(), view, day:day()?.date}));
+  if(!silent) flash('Canvas saved');
+}
 
 function setMode(m){
+  if(m===mode) return;
+  if(mode==='journal' && m==='canvas'){
+    persistJournalFields();
+    populateDayOnCanvas();
+  } else if(mode==='canvas' && m==='journal'){
+    syncCanvasEntriesIntoJournal();
+    saveCanvasState(true);
+    renderDay();
+    flash('Journal + canvas kept');
+  }
+  mode=m;
   document.body.classList.toggle('mode-canvas', m==='canvas');
-  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.mode===m));
+  document.querySelectorAll('#tabs [data-mode]').forEach(b=>b.classList.toggle('on', b.dataset.mode===m));
+  if(m==='canvas'){
+    const d=day();
+    $('#cDayLabel').textContent = d ? (d.weekday + ' · ' + d.date) : '';
+    applyView();
+  }
 }
-document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-$('#toCanvas').onclick=()=>{setMode('canvas'); seedPromptCard()};
-
-function day(){return PROMPTS.days[dayIdx]}
+document.querySelectorAll('#tabs [data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+$('#backJournal').onclick=()=>setMode('journal');
+$('#backJournal2').onclick=()=>setMode('journal');
+$('#toCanvas').onclick=()=>setMode('canvas');
 
 function renderDay(){
   const d=day(); if(!d) return;
@@ -171,38 +248,60 @@ function renderDay(){
     ['shadow','Shadow',d.shadow],
     ['humor','Humor',d.humor],
     ['meditation_notes','Meditation',d.meditation],
-    ['faith_notes','Faith — '+d.ref, d.verse + '\n\n' + d.faith_reflection + '\n\nAction: ' + d.faith_action],
+    ['faith_notes','Faith — '+d.ref, promptText(d,'faith')],
     ['free','Free write','Anything else on your heart today.']
   ];
   $('#fields').innerHTML = blocks.map(([k,title,prompt])=>`
     <h3>${title}</h3>
-    <p class="prompt">${prompt||''}</p>
-    ${k==='faith_notes'?`<div class="verse">${d.verse}<br><small>${d.ref}</small></div>`:''}
-    <textarea data-k="${k}" placeholder="Write here…">${entries[k]||''}</textarea>
+    <p class="prompt">${(prompt||'').replace(/</g,'&lt;')}</p>
+    ${k==='faith_notes'?`<div class="verse">${(d.verse||'').replace(/</g,'&lt;')}<br><small>${d.ref||''}</small></div>`:''}
+    <textarea data-k="${k}" placeholder="Write here…">${(entries[k]||'').replace(/</g,'&lt;')}</textarea>
   `).join('');
   $('#daySel').value = String(dayIdx);
 }
 
-$('#saveBtn').onclick=()=>{
-  const d=day(); const all=loadEntries();
-  const e={}; document.querySelectorAll('#fields textarea').forEach(t=>e[t.dataset.k]=t.value);
-  e.savedAt=new Date().toISOString();
-  all[d.date]=e; saveEntries(all); flash('Saved for '+d.date);
-};
+$('#saveBtn').onclick=()=>{ persistJournalFields(); flash('Saved for '+day().date); };
 
 function fillSelect(){
   $('#daySel').innerHTML = PROMPTS.days.map((d,i)=>`<option value="${i}">${d.date} · ${d.weekday}</option>`).join('');
 }
-$('#daySel').onchange=e=>{dayIdx=+e.target.value; renderDay()};
-$('#prev').onclick=()=>{dayIdx=Math.max(0,dayIdx-1); renderDay()};
-$('#next').onclick=()=>{dayIdx=Math.min(PROMPTS.days.length-1,dayIdx+1); renderDay()};
+$('#daySel').onchange=e=>{
+  if(mode==='canvas'){ syncCanvasEntriesIntoJournal(); saveCanvasState(true); }
+  else persistJournalFields();
+  dayIdx=+e.target.value; renderDay();
+  if(mode==='canvas') populateDayOnCanvas();
+};
+$('#prev').onclick=()=>{
+  if(mode==='canvas'){ syncCanvasEntriesIntoJournal(); saveCanvasState(true); } else persistJournalFields();
+  dayIdx=Math.max(0,dayIdx-1); renderDay(); if(mode==='canvas') populateDayOnCanvas();
+};
+$('#next').onclick=()=>{
+  if(mode==='canvas'){ syncCanvasEntriesIntoJournal(); saveCanvasState(true); } else persistJournalFields();
+  dayIdx=Math.min(PROMPTS.days.length-1,dayIdx+1); renderDay(); if(mode==='canvas') populateDayOnCanvas();
+};
 
-/* ---- Canvas ---- */
 function uid(){return 'i'+Math.random().toString(36).slice(2,9)}
 function select(el){
   board.querySelectorAll('.item').forEach(x=>x.classList.remove('selected'));
   selected=el; if(el) el.classList.add('selected');
 }
+
+function wireItem(el){
+  const del=el.querySelector('.del');
+  el.addEventListener('pointerdown', e=>{
+    if(tool==='draw') return;
+    if(e.target===del) return;
+    if(e.target.closest && e.target.closest('.jb-entry') && e.detail>1) return;
+    select(el);
+    if(e.target.classList && e.target.classList.contains('jb-entry')) return;
+    if(el.isContentEditable && e.target===el) { /* allow caret */ }
+    const r=el.getBoundingClientRect();
+    drag={type:'item', el, ox:(e.clientX-r.left)/view.s, oy:(e.clientY-r.top)/view.s};
+    try{ el.setPointerCapture(e.pointerId); }catch{}
+    e.stopPropagation();
+  });
+}
+
 function addItem(kind, opts){
   const el=document.createElement('div');
   el.className='item '+kind;
@@ -210,45 +309,101 @@ function addItem(kind, opts){
   el.style.left=(opts.x||100)+'px'; el.style.top=(opts.y||100)+'px';
   if(opts.w) el.style.width=opts.w;
   const del=document.createElement('button'); del.className='del'; del.textContent='✕';
-  del.onclick=e=>{e.stopPropagation(); el.remove(); select(null)};
-  if(kind==='text'||kind==='sticky'||kind==='prompt-card'){
+  del.onclick=e=>{e.stopPropagation(); el.remove(); select(null); saveCanvasState(true)};
+
+  if(kind==='journal-block'){
+    el.dataset.field=opts.field;
+    el.innerHTML=`<div class="jb-title"></div><div class="jb-prompt"></div><div class="jb-entry" contenteditable="true" data-ph="Write here…"></div>`;
+    el.querySelector('.jb-title').textContent=opts.title||'';
+    el.querySelector('.jb-prompt').textContent=opts.prompt||'';
+    el.querySelector('.jb-entry').innerText=opts.entry||'';
+    el.querySelector('.jb-entry').addEventListener('blur',()=>{ syncCanvasEntriesIntoJournal(); saveCanvasState(true); });
+  } else if(kind==='day-header'){
+    el.textContent=opts.html||'';
+  } else if(kind==='text'||kind==='sticky'){
     el.contentEditable='true'; el.innerText=opts.html||(kind==='sticky'?'Note…':'Text');
-    el.onmousedown=e=>{if(tool!=='pan'&&tool!=='draw') e.stopPropagation()};
   } else if(kind==='image'){
     const img=document.createElement('img'); img.src=opts.html; el.appendChild(img);
   } else if(kind==='sticker'){
     el.dataset.emoji=opts.emoji||'✦'; el.textContent=opts.emoji||'✦';
   }
   el.appendChild(del);
-  el.addEventListener('pointerdown', e=>{
-    if(tool==='draw') return;
-    if(e.target===del) return;
-    select(el);
-    const r=el.getBoundingClientRect(), br=board.getBoundingClientRect();
-    drag={type:'item', el, ox:(e.clientX-r.left)/view.s, oy:(e.clientY-r.top)/view.s};
-    el.setPointerCapture(e.pointerId);
-    e.stopPropagation();
-  });
-  board.appendChild(el); select(el); return el;
+  wireItem(el);
+  board.appendChild(el); return el;
 }
 
-function seedPromptCard(){
-  const d=day(); if(!d) return;
-  addItem('prompt-card',{x:80,y:80, html:`${d.weekday}, ${d.date}\n\nGratitude: ${d.gratitude}\n\nIntention: ${d.intention}`});
+function clearJournalBlocks(){
+  board.querySelectorAll('.item.journal-block, .item.day-header').forEach(x=>x.remove());
 }
-$('#addPrompt').onclick=seedPromptCard;
+
+function layoutDayBlocks(d, entries){
+  clearJournalBlocks();
+  addItem('day-header',{id:'dayhead-'+d.date, x:40, y:30, html:`${d.weekday}, ${d.date}`});
+  FIELD_DEFS.forEach(([field,title,pkey], i)=>{
+    const col = i%2;
+    const row = Math.floor(i/2);
+    const x = 40 + col*300;
+    const y = 100 + row*220;
+    const pk = (pkey==='faith'||pkey==='free') ? pkey : pkey;
+    addItem('journal-block',{
+      id:'jb-'+d.date+'-'+field,
+      field, title, prompt: promptText(d, pk),
+      entry: entries[field]||'',
+      x, y
+    });
+  });
+}
+
+function populateDayOnCanvas(){
+  const d=day(); if(!d) return;
+  const entries=loadEntries()[d.date]||{};
+  const saved=loadCanvas();
+  // Keep decorations (non journal blocks). Rebuild day content from journal truth.
+  const decor=[...board.querySelectorAll('.item')].filter(el=>el.dataset.kind!=='journal-block' && el.dataset.kind!=='day-header');
+  // If switching days, wipe board except we'll restore this day's decor from saved
+  board.querySelectorAll('.item').forEach(x=>x.remove());
+  dctx.clearRect(0,0,draw.width,draw.height);
+  view={x:20,y:20,s: Math.min(1, (wrap.clientWidth||360)/700 )};
+  applyView();
+  layoutDayBlocks(d, entries);
+  if(saved && saved.day===d.date){
+    // restore positions for journal blocks if present; restore decor + ink
+    (saved.items||[]).forEach(it=>{
+      if(it.kind==='journal-block'){
+        const el=board.querySelector(`.item.journal-block[data-field="${it.field}"]`);
+        if(el){ el.style.left=it.x+'px'; el.style.top=it.y+'px'; if(it.w) el.style.width=it.w;
+          // entry text from journal (source of truth), already set
+        }
+      } else if(it.kind==='day-header'){
+        const el=board.querySelector('.item.day-header');
+        if(el){ el.style.left=it.x+'px'; el.style.top=it.y+'px'; }
+      } else if(it.kind==='sticker'){
+        addItem('sticker',{id:it.id,x:it.x,y:it.y,emoji:it.emoji||it.html});
+      } else if(it.kind==='image'){
+        addItem('image',{id:it.id,x:it.x,y:it.y,html:it.html,w:it.w});
+      } else if(it.kind==='sticky'||it.kind==='text'){
+        addItem(it.kind,{id:it.id,x:it.x,y:it.y,html:it.html,w:it.w});
+      }
+    });
+    if(saved.view) { view=saved.view; applyView(); }
+    if(saved.ink){ const img=new Image(); img.onload=()=>dctx.drawImage(img,0,0); img.src=saved.ink; }
+  }
+  saveCanvasState(true);
+}
 
 document.querySelectorAll('#ctool [data-tool]').forEach(b=>{
   b.onclick=()=>{
     if(b.dataset.tool==='sticker'){
-      const pt = screenToBoard(wrap.clientWidth/2, wrap.clientHeight/2);
+      const pt = clientToBoard(wrap.getBoundingClientRect().left+wrap.clientWidth/2, wrap.getBoundingClientRect().top+wrap.clientHeight/2);
       addItem('sticker',{x:pt.x, y:pt.y, emoji:b.dataset.emoji});
+      saveCanvasState(true);
       return;
     }
     if(b.dataset.tool==='text'||b.dataset.tool==='sticky'){
-      const pt = screenToBoard(wrap.clientWidth/2, wrap.clientHeight/2);
+      const pt = clientToBoard(wrap.getBoundingClientRect().left+wrap.clientWidth/2, wrap.getBoundingClientRect().top+wrap.clientHeight/2);
       addItem(b.dataset.tool,{x:pt.x-60,y:pt.y-40});
       tool='pan';
+      saveCanvasState(true);
     } else {
       tool=b.dataset.tool;
     }
@@ -258,16 +413,12 @@ document.querySelectorAll('#ctool [data-tool]').forEach(b=>{
 });
 $('#imgFile').onchange=e=>{
   const f=e.target.files&&e.target.files[0]; if(!f) return;
-  const rd=new FileReader(); rd.onload=()=>{const pt=screenToBoard(wrap.clientWidth/2,wrap.clientHeight/2); addItem('image',{x:pt.x-80,y:pt.y-80,html:rd.result})};
+  const rd=new FileReader(); rd.onload=()=>{const pt=clientToBoard(wrap.getBoundingClientRect().left+wrap.clientWidth/2,wrap.getBoundingClientRect().top+wrap.clientHeight/2); addItem('image',{x:pt.x-80,y:pt.y-80,html:rd.result}); saveCanvasState(true)};
   rd.readAsDataURL(f); e.target.value='';
 };
-$('#saveCanvas').onclick=saveCanvasState;
-$('#clearDraw').onclick=()=>{dctx.clearRect(0,0,draw.width,draw.height)};
+$('#saveCanvas').onclick=()=>{ syncCanvasEntriesIntoJournal(); saveCanvasState(false); };
+$('#clearDraw').onclick=()=>{dctx.clearRect(0,0,draw.width,draw.height); saveCanvasState(true)};
 
-function screenToBoard(cx,cy){
-  const r=wrap.getBoundingClientRect();
-  return {x:(cx - (arguments.length>2?0:0) - view.x)/view.s, y:(cy - view.y)/view.s};
-}
 function clientToBoard(clientX, clientY){
   const r=wrap.getBoundingClientRect();
   return {x:(clientX - r.left - view.x)/view.s, y:(clientY - r.top - view.y)/view.s};
@@ -299,7 +450,11 @@ wrap.addEventListener('pointermove', e=>{
   }
   if(panning){ view.x=e.clientX-panning.x; view.y=e.clientY-panning.y; applyView(); }
 });
-wrap.addEventListener('pointerup', ()=>{drawing=false; last=null; panning=null; drag=null});
+wrap.addEventListener('pointerup', ()=>{
+  if(drag) saveCanvasState(true);
+  if(drawing) saveCanvasState(true);
+  drawing=false; last=null; panning=null; drag=null;
+});
 wrap.addEventListener('wheel', e=>{
   e.preventDefault();
   const r=wrap.getBoundingClientRect();
@@ -314,26 +469,13 @@ $('#zin').onclick=()=>{view.s=Math.min(2.5,view.s*1.15); applyView()};
 $('#zout').onclick=()=>{view.s=Math.max(0.35,view.s/1.15); applyView()};
 $('#zreset').onclick=()=>{view={x:40,y:40,s:1}; applyView()};
 
-function restoreCanvas(){
-  const c=loadCanvas();
-  board.querySelectorAll('.item').forEach(x=>x.remove());
-  dctx.clearRect(0,0,draw.width,draw.height);
-  if(!c) return;
-  if(c.view) view=c.view; applyView();
-  (c.items||[]).forEach(it=>{
-    if(it.kind==='sticker') addItem('sticker',{id:it.id,x:it.x,y:it.y,emoji:it.html||it.emoji});
-    else addItem(it.kind,{id:it.id,x:it.x,y:it.y,html:it.html,w:it.w});
-  });
-  if(c.ink){ const img=new Image(); img.onload=()=>dctx.drawImage(img,0,0); img.src=c.ink; }
-}
-
 async function boot(u){
   user=u; AtriumAuth.userBar($('#userbar'));
   const res=await fetch('prompts.json',{cache:'no-store'}); PROMPTS=await res.json();
   const today=new Date(); const iso=today.toISOString().slice(0,10);
-  dayIdx=Math.max(0, PROMPTS.days.findIndex(d=>d.date>=iso));
-  if(dayIdx<0) dayIdx=0;
-  fillSelect(); renderDay(); applyView(); restoreCanvas();
+  let idx=PROMPTS.days.findIndex(d=>d.date>=iso);
+  dayIdx=idx<0?0:idx;
+  fillSelect(); renderDay(); applyView();
 }
 AtriumAuth.mountGate({
   title:'Normies Awakening',
