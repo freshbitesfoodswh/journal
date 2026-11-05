@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Normies Awakening Journal</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0c0718">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#0c0718;--ink:#f4eefc;--muted:#a89bc0;--violet:#7B2FF7;--pink:#FF2E9A;--cyan:#00C2FF;--card:rgba(255,255,255,.06);--line:rgba(123,47,247,.35)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:radial-gradient(900px 500px at 10% -10%,rgba(123,47,247,.35),transparent),radial-gradient(700px 400px at 100% 100%,rgba(255,46,154,.18),transparent),var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);backdrop-filter:blur(14px);position:sticky;top:0;z-index:20;background:rgba(12,7,24,.7)}
+header h1{margin:0;font-weight:300;letter-spacing:.18em;text-transform:uppercase;font-size:14px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;color:transparent}
+header .spacer{flex:1}#userbar{display:flex;align-items:center;gap:8px;font-size:12px}
+#userbar img{width:28px;height:28px;border-radius:50%}#userbar button,.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.tabs{display:flex;gap:6px;padding:10px 12px;overflow-x:auto}
+.tabs button{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.tabs button.on{color:#0c0718;background:linear-gradient(90deg,var(--cyan),var(--violet));border:0;font-weight:600}
+main{max-width:920px;margin:0 auto;padding:8px 14px 80px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:10px 0;backdrop-filter:blur(12px)}
+.card h2{margin:0 0 6px;font-size:18px;font-weight:500}.card h3{margin:14px 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:12px;margin-bottom:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+label{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}
+textarea,input[type=text]{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:10px;font:inherit;resize:vertical;min-height:72px}
+.prompt{font-style:italic;color:#d7c8f5;margin:0 0 6px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+button.primary{background:linear-gradient(90deg,var(--cyan),var(--violet));border:0;color:#0c0718;font-weight:700;border-radius:12px;padding:12px 16px;cursor:pointer}
+button.ghost{min-height:40px}.daynav{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:8px 0}
+.daynav select{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px}
+.verse{border-left:3px solid var(--pink);padding-left:12px;margin:8px 0;color:#e8d5ff}
+.saved{font-size:12px;color:#7dffa8;min-height:1.2em}
+/* Canvas mode */
+#canvas-pane{display:none;height:calc(100dvh - 120px);position:relative}
+body.mode-canvas main{max-width:none;padding:0;height:calc(100dvh - 110px)}
+body.mode-canvas #journal-pane{display:none}body.mode-canvas #canvas-pane{display:flex;flex-direction:column;height:100%}
+.ctool{display:flex;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:rgba(12,7,24,.85)}
+.ctool button,.ctool label.btn{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:13px}
+.ctool button.on{outline:2px solid var(--cyan)}.ctool input[type=file]{display:none}
+#board-wrap{flex:1;overflow:hidden;position:relative;background:
+  linear-gradient(rgba(123,47,247,.08) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(123,47,247,.08) 1px,transparent 1px),#0a0614;
+  background-size:40px 40px;touch-action:none;cursor:grab}
+#board{position:absolute;left:0;top:0;transform-origin:0 0}
+.item{position:absolute;min-width:40px;min-height:24px;border:1px solid transparent;border-radius:10px;padding:8px;cursor:move;user-select:none;background:rgba(255,255,255,.05)}
+.item.selected{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,194,255,.25)}
+.item.text{min-width:140px;white-space:pre-wrap;font-size:14px;line-height:1.4}
+.item.sticky{background:#ffe08a;color:#2a1a00;width:160px;min-height:120px;box-shadow:0 8px 20px rgba(0,0,0,.35);font-weight:500}
+.item.image img{max-width:220px;max-height:220px;display:block;border-radius:8px;pointer-events:none}
+.item.sticker{font-size:42px;background:transparent;border:0;padding:4px;text-align:center}
+.item.prompt-card{width:240px;background:linear-gradient(160deg,rgba(123,47,247,.35),rgba(255,46,154,.2));border:1px solid rgba(255,255,255,.2)}
+.item .del{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;border:0;background:#ff4d6d;color:#fff;display:none;cursor:pointer;font-size:12px}
+.item.selected .del{display:grid;place-items:center}
+#draw{position:absolute;left:0;top:0;pointer-events:none}
+body.tool-draw #draw{pointer-events:auto;cursor:crosshair}
+body.tool-draw #board-wrap{cursor:crosshair}
+.zoomhud{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;z-index:5}
+.zoomhud button{background:rgba(0,0,0,.55);border:1px solid var(--line);color:#fff;border-radius:8px;padding:8px 10px}
+@media(max-width:640px){header h1{font-size:11px}.item.image img{max-width:160px}}
+</style>
+<script src="auth-config.js"></script>
+<script src="auth.js"></script>
+</head>
+<body>
+<header>
+  <h1>Normies Awakening</h1>
+  <div class="spacer"></div>
+  <div id="userbar"></div>
+</header>
+<div class="tabs" id="tabs">
+  <button class="on" data-mode="journal">Journal</button>
+  <button data-mode="canvas">Canvas</button>
+</div>
+<main>
+  <div id="journal-pane">
+    <div class="daynav">
+      <button class="ghost" id="prev">←</button>
+      <select id="daySel"></select>
+      <button class="ghost" id="next">→</button>
+    </div>
+    <div class="card" id="dayCard">
+      <h2 id="dateTitle">Loading…</h2>
+      <div class="meta" id="meta"></div>
+      <div id="fields"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="primary" id="saveBtn">Save entry</button>
+        <button class="ghost" id="toCanvas">Open in Canvas ▦</button>
+      </div>
+      <div class="saved" id="savedMsg"></div>
+    </div>
+  </div>
+  <div id="canvas-pane">
+    <div class="ctool" id="ctool">
+      <button data-tool="pan" class="on">Pan</button>
+      <button data-tool="text">Text</button>
+      <button data-tool="sticky">Sticky</button>
+      <button data-tool="draw">Draw</button>
+      <button data-tool="sticker" data-emoji="👁">👁</button>
+      <button data-tool="sticker" data-emoji="✦">✦</button>
+      <button data-tool="sticker" data-emoji="🌙">🌙</button>
+      <button data-tool="sticker" data-emoji="💜">💜</button>
+      <button data-tool="sticker" data-emoji="✨">✨</button>
+      <button id="addPrompt">+ Today's prompt</button>
+      <label class="btn">Image<input type="file" id="imgFile" accept="image/*"></label>
+      <button id="clearDraw">Clear ink</button>
+      <button id="saveCanvas">Save canvas</button>
+    </div>
+    <div id="board-wrap">
+      <div id="board">
+        <canvas id="draw" width="3000" height="2000"></canvas>
+      </div>
+      <div class="zoomhud">
+        <button id="zin">+</button>
+        <button id="zout">−</button>
+        <button id="zreset">100%</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+let PROMPTS={days:[]}, dayIdx=0, user=null, tool='pan';
+let view={x:40,y:40,s:1}, drag=null, selected=null;
+const board=$('#board'), wrap=$('#board-wrap'), draw=$('#draw'), dctx=draw.getContext('2d');
+dctx.strokeStyle='#FF2E9A';dctx.lineWidth=3;dctx.lineCap='round';
+
+function storageKey(suffix){
+  const email=(user&&user.email)||'anon';
+  return 'naw:journal:'+email.toLowerCase()+':'+suffix;
+}
+function loadEntries(){try{return JSON.parse(localStorage.getItem(storageKey('entries'))||'{}')}catch{return{}}}
+function saveEntries(e){localStorage.setItem(storageKey('entries'),JSON.stringify(e))}
+function loadCanvas(){try{return JSON.parse(localStorage.getItem(storageKey('canvas'))||'null')}catch{return null}}
+function saveCanvasState(){
+  const items=[...board.querySelectorAll('.item')].map(el=>({
+    id:el.dataset.id, kind:el.dataset.kind, x:parseFloat(el.style.left), y:parseFloat(el.style.top),
+    html:el.dataset.kind==='image'?el.querySelector('img').src:el.innerText,
+    w:el.style.width||'', emoji:el.dataset.emoji||''
+  }));
+  localStorage.setItem(storageKey('canvas'), JSON.stringify({items, ink:draw.toDataURL(), view}));
+  flash('Canvas saved');
+}
+
+function flash(msg){const el=$('#savedMsg'); if(el){el.textContent=msg; setTimeout(()=>el.textContent='',2500)}}
+
+function applyView(){board.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.s})`}
+
+function setMode(m){
+  document.body.classList.toggle('mode-canvas', m==='canvas');
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.mode===m));
+}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+$('#toCanvas').onclick=()=>{setMode('canvas'); seedPromptCard()};
+
+function day(){return PROMPTS.days[dayIdx]}
+
+function renderDay(){
+  const d=day(); if(!d) return;
+  $('#dateTitle').textContent = d.weekday + ', ' + d.date;
+  $('#meta').innerHTML = [
+    d.moon&&`<span class="chip">🌙 ${d.moon}</span>`,
+    d.moon_sign&&`<span class="chip">${d.moon_sign}</span>`,
+    d.sun_sign&&`<span class="chip">☀ ${d.sun_sign}</span>`
+  ].filter(Boolean).join('');
+  const entries=loadEntries()[d.date]||{};
+  const blocks=[
+    ['gratitude','Gratitude',d.gratitude],
+    ['intention','Intention',d.intention],
+    ['higher_self','Higher Self',d.higher_self],
+    ['shadow','Shadow',d.shadow],
+    ['humor','Humor',d.humor],
+    ['meditation_notes','Meditation',d.meditation],
+    ['faith_notes','Faith — '+d.ref, d.verse + '\n\n' + d.faith_reflection + '\n\nAction: ' + d.faith_action],
+    ['free','Free write','Anything else on your heart today.']
+  ];
+  $('#fields').innerHTML = blocks.map(([k,title,prompt])=>`
+    <h3>${title}</h3>
+    <p class="prompt">${prompt||''}</p>
+    ${k==='faith_notes'?`<div class="verse">${d.verse}<br><small>${d.ref}</small></div>`:''}
+    <textarea data-k="${k}" placeholder="Write here…">${entries[k]||''}</textarea>
+  `).join('');
+  $('#daySel').value = String(dayIdx);
+}
+
+$('#saveBtn').onclick=()=>{
+  const d=day(); const all=loadEntries();
+  const e={}; document.querySelectorAll('#fields textarea').forEach(t=>e[t.dataset.k]=t.value);
+  e.savedAt=new Date().toISOString();
+  all[d.date]=e; saveEntries(all); flash('Saved for '+d.date);
+};
+
+function fillSelect(){
+  $('#daySel').innerHTML = PROMPTS.days.map((d,i)=>`<option value="${i}">${d.date} · ${d.weekday}</option>`).join('');
+}
+$('#daySel').onchange=e=>{dayIdx=+e.target.value; renderDay()};
+$('#prev').onclick=()=>{dayIdx=Math.max(0,dayIdx-1); renderDay()};
+$('#next').onclick=()=>{dayIdx=Math.min(PROMPTS.days.length-1,dayIdx+1); renderDay()};
+
+/* ---- Canvas ---- */
+function uid(){return 'i'+Math.random().toString(36).slice(2,9)}
+function select(el){
+  board.querySelectorAll('.item').forEach(x=>x.classList.remove('selected'));
+  selected=el; if(el) el.classList.add('selected');
+}
+function addItem(kind, opts){
+  const el=document.createElement('div');
+  el.className='item '+kind;
+  el.dataset.kind=kind; el.dataset.id=opts.id||uid();
+  el.style.left=(opts.x||100)+'px'; el.style.top=(opts.y||100)+'px';
+  if(opts.w) el.style.width=opts.w;
+  const del=document.createElement('button'); del.className='del'; del.textContent='✕';
+  del.onclick=e=>{e.stopPropagation(); el.remove(); select(null)};
+  if(kind==='text'||kind==='sticky'||kind==='prompt-card'){
+    el.contentEditable='true'; el.innerText=opts.html||(kind==='sticky'?'Note…':'Text');
+    el.onmousedown=e=>{if(tool!=='pan'&&tool!=='draw') e.stopPropagation()};
+  } else if(kind==='image'){
+    const img=document.createElement('img'); img.src=opts.html; el.appendChild(img);
+  } else if(kind==='sticker'){
+    el.dataset.emoji=opts.emoji||'✦'; el.textContent=opts.emoji||'✦';
+  }
+  el.appendChild(del);
+  el.addEventListener('pointerdown', e=>{
+    if(tool==='draw') return;
+    if(e.target===del) return;
+    select(el);
+    const r=el.getBoundingClientRect(), br=board.getBoundingClientRect();
+    drag={type:'item', el, ox:(e.clientX-r.left)/view.s, oy:(e.clientY-r.top)/view.s};
+    el.setPointerCapture(e.pointerId);
+    e.stopPropagation();
+  });
+  board.appendChild(el); select(el); return el;
+}
+
+function seedPromptCard(){
+  const d=day(); if(!d) return;
+  addItem('prompt-card',{x:80,y:80, html:`${d.weekday}, ${d.date}\n\nGratitude: ${d.gratitude}\n\nIntention: ${d.intention}`});
+}
+$('#addPrompt').onclick=seedPromptCard;
+
+document.querySelectorAll('#ctool [data-tool]').forEach(b=>{
+  b.onclick=()=>{
+    if(b.dataset.tool==='sticker'){
+      const pt = screenToBoard(wrap.clientWidth/2, wrap.clientHeight/2);
+      addItem('sticker',{x:pt.x, y:pt.y, emoji:b.dataset.emoji});
+      return;
+    }
+    if(b.dataset.tool==='text'||b.dataset.tool==='sticky'){
+      const pt = screenToBoard(wrap.clientWidth/2, wrap.clientHeight/2);
+      addItem(b.dataset.tool,{x:pt.x-60,y:pt.y-40});
+      tool='pan';
+    } else {
+      tool=b.dataset.tool;
+    }
+    document.querySelectorAll('#ctool [data-tool]').forEach(x=>x.classList.toggle('on', x.dataset.tool===tool && !x.dataset.emoji));
+    document.body.classList.toggle('tool-draw', tool==='draw');
+  };
+});
+$('#imgFile').onchange=e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const rd=new FileReader(); rd.onload=()=>{const pt=screenToBoard(wrap.clientWidth/2,wrap.clientHeight/2); addItem('image',{x:pt.x-80,y:pt.y-80,html:rd.result})};
+  rd.readAsDataURL(f); e.target.value='';
+};
+$('#saveCanvas').onclick=saveCanvasState;
+$('#clearDraw').onclick=()=>{dctx.clearRect(0,0,draw.width,draw.height)};
+
+function screenToBoard(cx,cy){
+  const r=wrap.getBoundingClientRect();
+  return {x:(cx - (arguments.length>2?0:0) - view.x)/view.s, y:(cy - view.y)/view.s};
+}
+function clientToBoard(clientX, clientY){
+  const r=wrap.getBoundingClientRect();
+  return {x:(clientX - r.left - view.x)/view.s, y:(clientY - r.top - view.y)/view.s};
+}
+
+let drawing=false, last=null, panning=null;
+wrap.addEventListener('pointerdown', e=>{
+  if(e.target.closest('.item') || e.target.closest('.zoomhud')) return;
+  select(null);
+  if(tool==='draw'){
+    drawing=true; last=clientToBoard(e.clientX,e.clientY);
+    wrap.setPointerCapture(e.pointerId);
+  } else {
+    panning={x:e.clientX-view.x, y:e.clientY-view.y};
+    wrap.setPointerCapture(e.pointerId);
+  }
+});
+wrap.addEventListener('pointermove', e=>{
+  if(drag&&drag.type==='item'){
+    const p=clientToBoard(e.clientX,e.clientY);
+    drag.el.style.left=(p.x-drag.ox)+'px';
+    drag.el.style.top=(p.y-drag.oy)+'px';
+    return;
+  }
+  if(drawing&&last){
+    const p=clientToBoard(e.clientX,e.clientY);
+    dctx.beginPath(); dctx.moveTo(last.x,last.y); dctx.lineTo(p.x,p.y); dctx.stroke();
+    last=p; return;
+  }
+  if(panning){ view.x=e.clientX-panning.x; view.y=e.clientY-panning.y; applyView(); }
+});
+wrap.addEventListener('pointerup', ()=>{drawing=false; last=null; panning=null; drag=null});
+wrap.addEventListener('wheel', e=>{
+  e.preventDefault();
+  const r=wrap.getBoundingClientRect();
+  const mx=e.clientX-r.left, my=e.clientY-r.top;
+  const old=view.s;
+  view.s=Math.min(2.5, Math.max(0.35, view.s*(e.deltaY>0?0.9:1.1)));
+  view.x = mx - (mx-view.x)*(view.s/old);
+  view.y = my - (my-view.y)*(view.s/old);
+  applyView();
+},{passive:false});
+$('#zin').onclick=()=>{view.s=Math.min(2.5,view.s*1.15); applyView()};
+$('#zout').onclick=()=>{view.s=Math.max(0.35,view.s/1.15); applyView()};
+$('#zreset').onclick=()=>{view={x:40,y:40,s:1}; applyView()};
+
+function restoreCanvas(){
+  const c=loadCanvas();
+  board.querySelectorAll('.item').forEach(x=>x.remove());
+  dctx.clearRect(0,0,draw.width,draw.height);
+  if(!c) return;
+  if(c.view) view=c.view; applyView();
+  (c.items||[]).forEach(it=>{
+    if(it.kind==='sticker') addItem('sticker',{id:it.id,x:it.x,y:it.y,emoji:it.html||it.emoji});
+    else addItem(it.kind,{id:it.id,x:it.x,y:it.y,html:it.html,w:it.w});
+  });
+  if(c.ink){ const img=new Image(); img.onload=()=>dctx.drawImage(img,0,0); img.src=c.ink; }
+}
+
+async function boot(u){
+  user=u; AtriumAuth.userBar($('#userbar'));
+  const res=await fetch('prompts.json',{cache:'no-store'}); PROMPTS=await res.json();
+  const today=new Date(); const iso=today.toISOString().slice(0,10);
+  dayIdx=Math.max(0, PROMPTS.days.findIndex(d=>d.date>=iso));
+  if(dayIdx<0) dayIdx=0;
+  fillSelect(); renderDay(); applyView(); restoreCanvas();
+}
+AtriumAuth.mountGate({
+  title:'Normies Awakening',
+  blurb:'Your guided journal. Sign in with Google — Teri & Tiffani only for now.',
+  onReady: boot
+});
+</script>
+</body>
+</html>
