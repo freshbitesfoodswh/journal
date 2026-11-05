@@ -1,5 +1,8 @@
 # Changelog — Normies Awakening Journal
 
+## 1.1.0 — 2026-11-04 (America/Chicago)
+- Ask Jedi Bot collapsible request panel (shared with Atrium builds)
+
 ## 1.0.1 — 2026-11-04 (America/Chicago)
 - Canvas keeps the current day: each prompt + your written entry become draggable editable blocks
 - Stickers / text / draw layer on top; back to Journal restores entries (nothing lost)
